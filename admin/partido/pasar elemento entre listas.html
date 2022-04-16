@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Pasar elementos de una lista a otra</title>
+<style type="text/css">
+select {width:80px}
+</style>
+<script type="text/javascript">
+<!--
+function pasar() {
+	obj=document.getElementById('sel1');
+	if (obj.selectedIndex==-1) return;
+  for (i=0; opt=obj.options[i]; i++)
+    if (opt.selected) {
+    	valor=opt.value; // almacenar value
+    	txt=obj.options[i].text; // almacenar el texto
+    	obj.options[i]=null; // borrar el item si está seleccionado
+    	obj2=document.getElementById('sel2');
+      if (obj2.options[0].value=='-') // si solo está la opción inicial borrarla
+        obj2.options[0]=null;
+    	opc = new Option(txt,valor);
+    	eval(obj2.options[obj2.options.length]=opc);
+  }	
+}
+-->
+</script>
+</head>
+
+<body>
+<p>
+<label for="sel1">Origen:</label>
+<select id="sel1" size="5" multiple="multiple">
+<option value="1">Uno</option>
+<option value="2">Dos</option>
+<option value="3">Tres</option>
+<option value="4">Cuatro</option>
+<option value="5">Cinco</option>
+</select>
+<label for="sel2">Destino:</label>
+<select id="sel2" size="5">
+<option value='-'>-</option>
+</select></p>
+<input type="button" value="Pasar" onclick="pasar()" />
+</body>
+</html>

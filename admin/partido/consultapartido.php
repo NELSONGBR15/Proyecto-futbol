@@ -1,0 +1,869 @@
+﻿<?php
+	
+					
+					/*todos los partidos*/
+					include ('../../php/conexion.php');
+					include ('../../php/funciones.php');
+					mysql_set_charset('utf8');
+					$instruccion = "SELECT p.fecha, p.local, p.visitante,p.caplocal,p.capvisitante, p.tgolam, p.tgolaz,p.tamam,p.tamaz,p.troam,p.troaz
+					FROM partido p
+					WHERE p.fecha='".$_GET['fecha']."'
+					ORDER BY p.fecha DESC LIMIT 1" ;
+					$consulta = mysql_query ($instruccion, $conexion)
+						or die ("Fallo en la consulta $instruccion");
+					$nfilas = mysql_num_rows ($consulta);
+					mysql_close ($conexion);
+	?>
+
+	<table id="todosgoless">
+	<?php
+
+	
+	for ($i=0; $i<$nfilas; $i++)
+										{
+										$resultado = mysql_fetch_array ($consulta);
+					
+					//todos los datos en un partido X por color ordenado por posicion de 0 a n
+					include ('../../php/conexion.php');
+					$instruccion = "SELECT i.usuario,i.golam, i.roam, i.amam, s.nombre, s.apellidos, s.posicion, i.color
+									FROM incidencias i
+									LEFT JOIN socio s ON i.usuario = s.usuario
+									WHERE fecha = '".$resultado['fecha']."'
+									AND color = 'am'
+									ORDER BY posicion ASC";
+					$filaam = mysql_query ($instruccion, $conexion)
+						or die ("Fallo en la consulta $instruccion");
+					$jugam = mysql_fetch_array ($filaam);
+					
+					mysql_close($conexion);
+					
+					//todos los datos en un partido X por color ordenado por posicion de 0 a n
+					include ('../../php/conexion.php');
+					$instruccion = "SELECT i.usuario,i.golaz, i.roaz, i.amaz, s.nombre, s.apellidos, s.posicion, i.color
+									FROM incidencias i
+									LEFT JOIN socio s ON i.usuario = s.usuario
+									WHERE fecha = '".$resultado['fecha']."'
+									AND color = 'az'
+									ORDER BY posicion ASC";
+					$filaaz = mysql_query ($instruccion, $conexion)
+						or die ("Fallo en la consulta $instruccion");
+					$jugaz = mysql_fetch_array ($filaaz);
+					mysql_close($conexion);
+					
+		
+
+	?>
+	<tr>
+	<tr>
+	<td style="color:red;border-bottom:1px dotted MediumSpringGreen;">Porteros</td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	<td style="border-bottom:1px dotted MediumSpringGreen;"></td>
+	</tr>
+	<?php 
+	
+	while ($jugam['posicion']==0||$jugaz['posicion']==0)
+	
+	{
+	if ($resultado['local']=='am')
+		{
+		if ($jugam['posicion']==1)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		<?php } ?>
+		<td>
+		</td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		</tr>
+<?php	
+		if ($jugam['posicion']==0) { $jugam = mysql_fetch_array ($filaam);}
+		$jugaz = mysql_fetch_array ($filaaz);
+		}
+	else {
+	
+	 if ($jugaz['posicion']==1)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+			?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td> <?php } ?>
+		<td></td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		<td>
+		
+		</td>
+		</tr> <?php 
+		$jugam = mysql_fetch_array ($filaam);
+		if ($jugaz['posicion']==0) { $jugaz = mysql_fetch_array ($filaaz);}
+			}
+	}
+	?>
+	
+	
+	
+	<tr>
+	<td style="color:Cornsilk;border-bottom:1px dotted DeepPink;">Defensas</td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	<td style="border-bottom:1px dotted DeepPink;"></td>
+	</tr>
+		<?php 
+	while ($jugam['posicion']==1||$jugaz['posicion']==1)
+	
+	{
+	if ($resultado['local']=='am')
+		{
+		if ($jugam['posicion']==2)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		<?php } ?>
+		<td>
+		</td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		</tr>
+<?php	
+		if ($jugam['posicion']==1) { $jugam = mysql_fetch_array ($filaam);}
+		$jugaz = mysql_fetch_array ($filaaz);
+		}
+	else {
+	
+	 if ($jugaz['posicion']==2)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+			?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td> <?php } ?>
+		<td></td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		<td>
+		
+		</td>
+		</tr> <?php 
+		$jugam = mysql_fetch_array ($filaam);
+		if ($jugaz['posicion']==1) { $jugaz = mysql_fetch_array ($filaaz);}
+			}
+	}
+	?>
+	<tr>
+	<td style="color:chocolate;border-bottom:1px dotted RoyalBlue;">Centrocampistas</td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	<td style="border-bottom:1px dotted RoyalBlue;"></td>
+	</tr>
+		<?php 
+	while ($jugam['posicion']==2||$jugaz['posicion']==2)
+	
+	{
+	if ($resultado['local']=='am')
+		{
+		if ($jugam['posicion']==3)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		<?php } ?>
+		<td>
+		</td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		</tr>
+<?php	
+		if ($jugam['posicion']==2) { $jugam = mysql_fetch_array ($filaam);}
+		$jugaz = mysql_fetch_array ($filaaz);
+		}
+	else {
+	
+	 if ($jugaz['posicion']==3)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+			?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td> <?php } ?>
+		<td></td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		<td>
+		
+		</td>
+		</tr> <?php 
+		$jugam = mysql_fetch_array ($filaam);
+		if ($jugaz['posicion']==2) { $jugaz = mysql_fetch_array ($filaaz);}
+			}
+	}
+	?>
+	</tr>
+	<td style="color:khaki;border-bottom:1px dotted Purple;">Delanteros</td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	<td style="border-bottom:1px dotted Purple;"></td>
+	</tr>
+			<?php 
+	while ($jugam['posicion']==3||$jugaz['posicion']==3)
+	
+	{
+	if ($resultado['local']=='am')
+		{
+		if ($jugam['posicion']!=3)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		<?php } ?>
+		<td>
+		</td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		</tr>
+<?php	
+		if ($jugam['posicion']==3) { $jugam = mysql_fetch_array ($filaam);}
+		$jugaz = mysql_fetch_array ($filaaz);
+		}
+	else {
+	
+	 if ($jugaz['posicion']>3)
+			{ ?>
+			<tr><td></td><td></td><td></td><td></td><td></td>
+			<?php }
+		else {
+			?>
+		<tr>
+		<td></td>
+		<td>
+		<?php 
+		if ($jugaz['roaz']>0) {
+								for ($c=0;$c<$jugaz['roaz'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugaz['amaz']>0) {
+								for ($c=0;$c<$jugaz['amaz'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php if ($jugaz['golaz']>0) {
+								for ($c=0;$c<$jugaz['golaz'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		
+		</td>
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugaz['usuario']; ?>','<?php echo $jugaz['nombre'] ?>','<?php echo $jugaz['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')"><?php  echo $jugaz['nombre']." ".substr($jugaz['apellidos'],0,3)."."; 
+		if ($resultado['capvisitante']==$jugaz['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a></td> <?php } ?>
+		<td></td>
+		
+		<td><a style="color:aqua;" href="javascript:showLightbox('<?php echo $jugam['usuario']; ?>','<?php echo $jugam['nombre'] ?>','<?php echo $jugam['apellidos'] ?>','<?php echo $_GET['fecha'] ?>')">
+		<?php  echo $jugam['nombre']." ".substr($jugam['apellidos'],0,3).".";
+		if ($resultado['caplocal']==$jugam['usuario']) { echo "<span style='color:white;'>&nbsp;C&nbsp;</span>";}
+		?></a>
+		</td>
+		
+		<td>
+		<?php 
+		if ($jugam['golam']>0) {
+								for ($c=0;$c<$jugam['golam'];$c++)
+										{
+										echo "<img src='../../images/socio/gol20x20.png' />";
+										}
+								}
+		?>
+		</td>
+		<td>
+		<?php 
+		if ($jugam['amam']>0) {
+								for ($c=0;$c<$jugam['amam'];$c++)
+										{
+										echo "<img src='../../images/socio/tamarilla20x26.png' />";
+										}
+								}
+		?>
+		</td>
+		<?php 
+		if ($jugam['roam']>0) {
+								for ($c=0;$c<$jugam['roam'];$c++)
+										{
+										echo "<img src='../../images/socio/troja20x26.png' />";
+										}
+								}
+		?>
+		<td>
+		
+		</td>
+		</tr> <?php 
+		$jugam = mysql_fetch_array ($filaam);
+		if ($jugaz['posicion']==3) { $jugaz = mysql_fetch_array ($filaaz);}
+			}
+	}
+	//num de jugadores de azul en partido X
+	include ('../../php/conexion.php');
+					$instruccion = "SELECT COUNT( usuario ) AS contar
+					FROM incidencias
+					WHERE fecha = '".$resultado['fecha']."'
+					AND color = 'az'
+					GROUP BY color";
+
+					$filaaz = mysql_query ($instruccion, $conexion)
+						or die ("Fallo en la consulta amarillo");
+					$jugaz = mysql_fetch_array ($filaaz);
+					$jugazz=$jugaz['contar'];
+					mysql_close($conexion);
+	//num de jugadores de amarillo en partido X
+	include ('../../php/conexion.php');
+					$instruccion = "SELECT COUNT( usuario ) AS contar
+					FROM incidencias
+					WHERE fecha = '".$resultado['fecha']."'
+					AND color = 'am'
+					GROUP BY color";
+
+					$filaam = mysql_query ($instruccion, $conexion)
+						or die ("Fallo en la consulta azul");
+					$jugam = mysql_fetch_array ($filaam);
+					$jugamm=$jugam['contar'];
+					mysql_close($conexion);
+	
+	?>
+	
+	
+	
+	
+	
+	
+		<tr>
+	<td style="color:white;border-bottom:1px dotted white;">Total Jugadores</td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="color:white;font-weight:bold;border-bottom:1px dotted white;"><?php if ($resultado['local']=='am')
+		{echo $jugamm;} else {echo $jugazz;} ?></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="color:white;font-weight:bold;border-bottom:1px dotted white;"><?php if ($resultado['visitante']=='am')
+		{echo $jugamm;} else {echo $jugazz;} ?></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	<td style="border-bottom:1px dotted white;"></td>
+	</tr>
+	<?php } ?>
+	</table>

@@ -1,0 +1,26 @@
+SELECT usuario, SUM( golaz + golam ) AS goles_marcados
+FROM incidencias
+WHERE golaz >0
+OR golam >0
+GROUP BY usuario
+ORDER BY goles_marcados DESC
+LIMIT 0 , 5
+
+// consulta para index goleadores
+
+SELECT i.usuario, s.nombre, s.apellidos, SUM( i.golaz + i.golam ) AS goles_marcados
+FROM incidencias i
+LEFT JOIN socio s ON i.usuario = s.usuario
+WHERE golaz >0
+OR golam >0
+GROUP BY i.usuario
+ORDER BY goles_marcados DESC
+LIMIT 0 , 5
+
+//consulta para index de partidos
+
+SELECT tgolam, tgolaz,
+LOCAL , visitante, fecha
+FROM partido
+ORDER BY fecha DESC
+LIMIT 0 , 5

@@ -1,0 +1,73 @@
+#izqda {
+			margin:5px;
+			padding:4px;
+			float:left;
+			border:1px solid blue;
+			width:190px;
+			border-radius:15px;
+			}
+#drcha {
+		margin:5px;
+		padding:4px;
+		float:right;
+		border:1px solid white;
+		width:390px;
+		min-height:460px;
+		border-radius:15px;
+		}
+
+#todosgoles {
+		margin:5px;
+		padding:4px;
+		/*float:right;*/
+		border:1px solid white;
+		/*width:390px;*/
+		/*min-height:460px;*/
+		border-radius:15px;
+		}
+#todosgoless th {
+			color:lightgreen;
+			text-align:center;
+			}
+#todosgoless tr td {
+			color:aqua;
+			text-align:center;
+			}
+
+		#izqda p {
+		text-align:center;
+		color:orange;
+		font-size:14px;
+		}
+#izqda p span {
+			color:lightgreen;
+			font-size:16px;
+			}
+table  {
+	margin:auto;
+	}
+#drcha #misgoles th {
+			color:lightgreen;
+			text-align:center;
+			}
+#drcha #misgoles tr td {
+			color:lightgreen;
+			text-align:center;
+			}
+			
+#estadisticasmisgoles{
+					text-align:center;
+					border:2px solid white;
+					border-radius:5px;
+					margin-top:20px;
+					margin-bottom:20px;
+					}
+#estadisticasmisgoles tr th {
+						color:white;
+						font-size:14px;
+						}
+#estadisticasmisgoles tr td {
+							color:white;
+							font-size:14px;
+							padding:2px;
+						}
